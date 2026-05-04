@@ -1,0 +1,160 @@
+<app-layout>
+  @if (isLoading()) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  } @else if (project()) {
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h1>{{ project()!.name }}</h1>
+            <p class="text-muted">{{ project()!.description }}</p>
+          </div>
+          <button class="btn btn-primary" (click)="onCreateTask()">
+            <i class="bi bi-plus-circle me-2"></i>New Task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-4" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link active"
+          [attr.aria-selected]="activeTab() === 'tasks'"
+          (click)="activeTab.set('tasks')"
+        >
+          <i class="bi bi-list-check me-2"></i>Tasks
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button
+          class="nav-link"
+          [attr.aria-selected]="activeTab() === 'members'"
+          (click)="activeTab.set('members')"
+        >
+          <i class="bi bi-people me-2"></i>Members
+        </button>
+      </li>
+    </ul>
+
+    @if (activeTab() === 'tasks') {
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned To</th>
+                <th>Due Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @if (tasks().length === 0) {
+                <tr>
+                  <td colspan="6" class="text-center py-4">No tasks yet</td>
+                </tr>
+              } @else {
+                @for (task of tasks(); track task.id) {
+                  <tr>
+                    <td>{{ task.title }}</td>
+                    <td>
+                      <select
+                        class="form-select form-select-sm"
+                        [value]="task.status"
+                        (change)="onStatusChange(task.id, $event)"
+                      >
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="in_review">In Review</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td>
+                      @switch (task.priority) {
+                        @case ('critical') {
+                          <span class="badge bg-danger">Critical</span>
+                        }
+                        @case ('high') {
+                          <span class="badge bg-warning">High</span>
+                        }
+                        @case ('medium') {
+                          <span class="badge bg-info">Medium</span>
+                        }
+                        @case ('low') {
+                          <span class="badge bg-secondary">Low</span>
+                        }
+                      }
+                    </td>
+                    <td>
+                      {{ task.assignedTo?.firstName }} {{ task.assignedTo?.lastName }}
+                    </td>
+                    <td>
+                      {{ task.dueDate ? (task.dueDate | date: 'short') : '-' }}
+                    </td>
+                    <td>
+                      <a
+                        [routerLink]="['/tasks', task.id]"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                        <i class="bi bi-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                }
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+
+    @if (activeTab() === 'members') {
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Project Members</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (member of project()!.members; track member.userId) {
+                <tr>
+                  <td>{{ member.user?.firstName }} {{ member.user?.lastName }}</td>
+                  <td>{{ member.user?.email }}</td>
+                  <td>
+                    <span class="badge bg-primary">{{ member.role }}</span>
+                  </td>
+                  <td>{{ member.joinedAt | date: 'short' }}</td>
+                  <td>
+                    <button
+                      class="btn btn-sm btn-outline-danger"
+                      (click)="onRemoveMember(member.userId)"
+                    >
+                      <i class="bi bi-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    }
+  }
+</app-layout>

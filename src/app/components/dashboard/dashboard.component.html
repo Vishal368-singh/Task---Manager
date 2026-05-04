@@ -1,0 +1,179 @@
+<app-layout>
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1>Dashboard</h1>
+    </div>
+  </div>
+
+  @if (isLoading()) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  } @else if (stats()) {
+    <div class="row mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <div class="stat-value">{{ stats()!.totalTasks }}</div>
+            <div class="stat-label">Total Tasks</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <div class="stat-value text-success">{{ stats()!.completedTasks }}</div>
+            <div class="stat-label">Completed</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <div class="stat-value text-info">{{ stats()!.inProgressTasks }}</div>
+            <div class="stat-label">In Progress</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stat-card">
+          <div class="card-body">
+            <div class="stat-value text-danger">{{ stats()!.overdueTasks }}</div>
+            <div class="stat-label">Overdue</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Tasks by Priority</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>Critical</span>
+                <span class="badge bg-danger">{{ stats()!.tasksByPriority.critical }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>High</span>
+                <span class="badge bg-warning">{{ stats()!.tasksByPriority.high }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>Medium</span>
+                <span class="badge bg-info">{{ stats()!.tasksByPriority.medium }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>Low</span>
+                <span class="badge bg-secondary">{{ stats()!.tasksByPriority.low }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Tasks by Status</h5>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>To Do</span>
+                <span class="badge bg-secondary">{{ stats()!.tasksByStatus.todo }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>In Progress</span>
+                <span class="badge bg-primary">{{ stats()!.tasksByStatus.in_progress }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>In Review</span>
+                <span class="badge bg-info">{{ stats()!.tasksByStatus.in_review }}</span>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="d-flex justify-content-between">
+                <span>Completed</span>
+                <span class="badge bg-success">{{ stats()!.tasksByStatus.completed }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    @if (overdueTasks().length > 0) {
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="mb-0">
+                <i class="bi bi-exclamation-circle me-2 text-danger"></i>Overdue Tasks
+              </h5>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-hover mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Task</th>
+                    <th>Project</th>
+                    <th>Days Overdue</th>
+                    <th>Priority</th>
+                    <th>Assigned To</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (task of overdueTasks(); track task.id) {
+                    <tr>
+                      <td>{{ task.title }}</td>
+                      <td>{{ task.projectId }}</td>
+                      <td>
+                        <span class="badge bg-danger">
+                          {{ task.daysOverdue }} days
+                        </span>
+                      </td>
+                      <td>
+                        @switch (task.priority) {
+                          @case ('critical') {
+                            <span class="badge bg-danger">Critical</span>
+                          }
+                          @case ('high') {
+                            <span class="badge bg-warning">High</span>
+                          }
+                          @case ('medium') {
+                            <span class="badge bg-info">Medium</span>
+                          }
+                          @case ('low') {
+                            <span class="badge bg-secondary">Low</span>
+                          }
+                        }
+                      </td>
+                      <td>
+                        {{ task.assignedTo?.firstName }} {{ task.assignedTo?.lastName }}
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  }
+</app-layout>

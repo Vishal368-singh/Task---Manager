@@ -1,0 +1,8 @@
+.nav-link {
+  cursor: pointer;
+}
+
+.nav-link.active {
+  border-bottom: 3px solid #007bff;
+  color: #007bff;
+}
