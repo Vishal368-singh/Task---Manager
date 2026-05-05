@@ -8,7 +8,7 @@ import { User, AuthResponse, SignupRequest, LoginRequest } from '../models/index
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = 'http://localhost:8000/api/auth';
 
   private currentUserSignal = signal<User | null>(null);
   private tokenSignal = signal<string | null>(null);
