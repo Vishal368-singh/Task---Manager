@@ -1,0 +1,27 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <div class="row align-items-center">
+      <div class="col">
+        <h1>
+          <i class="bi bi-gear me-2"></i>Admin Panel
+        </h1>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-menu mb-4">
+    <div class="btn-group" role="group">
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active"
+        class="btn btn-outline-primary"
+      >
+        <i class="bi bi-people me-2"></i>User Management
+      </a>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

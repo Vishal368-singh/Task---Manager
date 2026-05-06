@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, publicGuard } from './guards/auth.guard';
+import { authGuard, publicGuard, adminGuard } from './guards/auth.guard';
 import { LoginComponent } from './components/auth/login.component';
 import { SignupComponent } from './components/auth/signup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -7,6 +7,9 @@ import { ProjectListComponent } from './components/projects/project-list.compone
 import { ProjectDetailComponent } from './components/projects/project-detail.component';
 import { TaskListComponent } from './components/tasks/task-list.component';
 import { TaskDetailComponent } from './components/tasks/task-detail.component';
+import { AdminDashboardComponent } from './components/admin/admin-dashboard.component';
+import { UserListComponent } from './components/admin/user-list.component';
+import { UserFormComponent } from './components/admin/user-form.component';
 
 export const routes: Routes = [
   {
@@ -54,6 +57,30 @@ export const routes: Routes = [
       {
         path: ':id',
         component: TaskDetailComponent
+      }
+    ]
+  },
+  {
+    path: 'admin',
+    canActivate: [authGuard, adminGuard],
+    component: AdminDashboardComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'users',
+        pathMatch: 'full'
+      },
+      {
+        path: 'users',
+        component: UserListComponent
+      },
+      {
+        path: 'users/create',
+        component: UserFormComponent
+      },
+      {
+        path: 'users/:id/edit',
+        component: UserFormComponent
       }
     ]
   },

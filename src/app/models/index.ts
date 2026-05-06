@@ -5,20 +5,34 @@ export interface User {
   firstName: string;
   lastName: string;
   role: UserRole;
+  isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
 
-export interface AuthResponse {
-  token: string;
-  user: User;
-}
+
 
 export interface SignupRequest {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
+}
+
+export interface CreateUserRequest {
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  role: UserRole;
+}
+
+export interface UpdateUserRequest {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  role?: UserRole;
+  isActive?: boolean;
 }
 
 export interface LoginRequest {

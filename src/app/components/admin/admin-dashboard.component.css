@@ -1,0 +1,52 @@
+:host {
+  display: block;
+}
+
+.admin-container {
+  padding: 2rem;
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 2px solid #0d6efd;
+}
+
+.admin-header h1 {
+  color: #333;
+  font-weight: 600;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.admin-menu {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-group .btn {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: 1px solid #0d6efd;
+  color: #0d6efd;
+}
+
+.btn-group .btn:hover {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.btn-group .btn.active {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.admin-content {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+}
+
+.bi {
+  vertical-align: -0.125em;
+}

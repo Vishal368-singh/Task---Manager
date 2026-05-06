@@ -1,0 +1,127 @@
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <h1>User Management</h1>
+    </div>
+    <div class="col-md-4 text-end">
+      <a routerLink="/admin/users/create" class="btn btn-primary">
+        <i class="bi bi-plus-circle me-2"></i>Create New User
+      </a>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ error() }}
+      <button type="button" class="btn-close" (click)="clearError()"></button>
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  } @else if (filteredUsers().length === 0) {
+    <div class="alert alert-info">
+      <i class="bi bi-info-circle me-2"></i>No users found
+    </div>
+  } @else {
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Search users by name or email..."
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+        />
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of filteredUsers(); track user.id) {
+            <tr>
+              <td>
+                <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+              </td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span
+                  class="badge"
+                  [class.bg-danger]="user.role === UserRole.ADMIN"
+                  [class.bg-secondary]="user.role === UserRole.MEMBER"
+                >
+                  {{ user.role }}
+                </span>
+              </td>
+              <td>
+                @if (user.isActive) {
+                  <span class="badge bg-success">Active</span>
+                } @else {
+                  <span class="badge bg-warning">Inactive</span>
+                }
+              </td>
+              <td>
+                {{ user.createdAt | date: 'short' }}
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm" role="group">
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary"
+                    title="Edit user"
+                    (click)="editUser(user.id)"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-warning"
+                    title="Toggle status"
+                    (click)="toggleUserStatus(user)"
+                  >
+                    <i
+                      [class.bi-check-circle]="!user.isActive"
+                      [class.bi-x-circle]="user.isActive"
+                      class="bi"
+                    ></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-info"
+                    title="Change role"
+                    (click)="assignRole(user)"
+                  >
+                    <i class="bi bi-shield"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger"
+                    title="Delete user"
+                    (click)="deleteUser(user.id)"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

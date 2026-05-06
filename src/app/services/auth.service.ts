@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap, map, catchError } from 'rxjs';
-import { User, AuthResponse, SignupRequest, LoginRequest } from '../models/index';
+import { User, SignupRequest, LoginRequest } from '../models/index';
 
 @Injectable({
   providedIn: 'root'
@@ -19,21 +19,21 @@ export class AuthService {
   readonly userRole = computed(() => this.currentUserSignal()?.role || null);
 
   constructor() {
-    this.initializeFromStorage();
+    // this.initializeFromStorage();
   }
 
-  private initializeFromStorage(): void {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
+  // private initializeFromStorage(): void {
+  //   const token = localStorage.getItem('token');
+  //   const user = localStorage.getItem('user');
     
-    if (token && user) {
-      this.tokenSignal.set(token);
-      this.currentUserSignal.set(JSON.parse(user));
-    }
-  }
+  //   if (token && user) {
+  //     this.tokenSignal.set(token);
+  //     this.currentUserSignal.set(JSON.parse(user));
+  //   }
+  // }
 
-  signup(request: SignupRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/signup`, request).pipe(
+  signup(request: SignupRequest) {
+    return this.http.post(`${this.apiUrl}/signup`, request).pipe(
       tap(response => {
         this.setAuthState(response);
       }),
@@ -44,8 +44,8 @@ export class AuthService {
     );
   }
 
-  login(request: LoginRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, request).pipe(
+  login(request: LoginRequest) {
+    return this.http.post(`${this.apiUrl}/login`, request).pipe(
       tap(response => {
         this.setAuthState(response);
       }),
@@ -72,19 +72,20 @@ export class AuthService {
     );
   }
 
-  refreshToken(): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh`, {}).pipe(
+  refreshToken() {
+    return this.http.post(`${this.apiUrl}/refresh`, {}).pipe(
       tap(response => {
         this.setAuthState(response);
       })
     );
   }
 
-  private setAuthState(response: AuthResponse): void {
-    this.tokenSignal.set(response.token);
-    this.currentUserSignal.set(response.user);
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('user', JSON.stringify(response.user));
+  private setAuthState(response:any): void {
+    const data = response;
+    this.tokenSignal.set(response.data.accessToken);
+    this.currentUserSignal.set(response.data.user);
+    localStorage.setItem('token', data.data.accessToken);
+    localStorage.setItem('user', JSON.stringify(data?.data?.user || '{}'));
   }
 
   isAdmin(): boolean {
