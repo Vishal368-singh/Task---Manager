@@ -1,23 +1,20 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { ProjectService } from '../../services/project.service';
-import { Task, Project, TaskStatus, TaskPriority } from '../../models/index';
-import { LayoutComponent } from '../layout/layout.component';
+import { Task } from '../../models/index';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, RouterLink, LayoutComponent],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskListComponent implements OnInit {
-  private taskService = inject(TaskService);
+  private readonly taskService = inject(TaskService);
 
   tasks = signal<Task[]>([]);
   isLoading = signal(true);

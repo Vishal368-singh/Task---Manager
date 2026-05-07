@@ -3,19 +3,18 @@ import { CommonModule } from '@angular/common';
 import { TaskService } from '../../services/task.service';
 import { ProjectService } from '../../services/project.service';
 import { DashboardStats, OverdueTask } from '../../models/index';
-import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, LayoutComponent],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
-  private taskService = inject(TaskService);
-  private projectService = inject(ProjectService);
+  private readonly taskService = inject(TaskService);
+  private readonly projectService = inject(ProjectService);
 
   stats = signal<DashboardStats | null>(null);
   overdueTasks = signal<OverdueTask[]>([]);

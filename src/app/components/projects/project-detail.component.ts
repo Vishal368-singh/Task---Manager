@@ -1,24 +1,22 @@
 import { Component, inject, signal, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from '../../services/project.service';
 import { TaskService } from '../../services/task.service';
 import { Project, Task, TaskStatus } from '../../models/index';
-import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'app-project-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, ReactiveFormsModule, LayoutComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './project-detail.component.html',
   styleUrls: ['./project-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectDetailComponent implements OnInit {
-  private projectService = inject(ProjectService);
-  private taskService = inject(TaskService);
-  private route = inject(ActivatedRoute);
+  private readonly projectService = inject(ProjectService);
+  private readonly taskService = inject(TaskService);
+  private readonly route = inject(ActivatedRoute);
 
   project = signal<Project | null>(null);
   tasks = signal<Task[]>([]);

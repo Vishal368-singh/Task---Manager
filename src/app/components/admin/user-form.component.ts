@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { CreateUserRequest, UpdateUserRequest, UserRole, User } from '../../models/index';
+import { CreateUserRequest, UpdateUserRequest, UserRole } from '../../models/index';
 
 @Component({
   selector: 'app-user-form',
@@ -14,10 +14,10 @@ import { CreateUserRequest, UpdateUserRequest, UserRole, User } from '../../mode
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserFormComponent implements OnInit {
-  private userService = inject(UserService);
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private fb = inject(FormBuilder);
+  private readonly userService = inject(UserService);
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly fb = inject(FormBuilder);
 
   form!: FormGroup;
   isLoading = signal(false);

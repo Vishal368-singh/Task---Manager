@@ -1,56 +1,42 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, tap, map, catchError } from 'rxjs';
+import { Observable, tap, catchError } from 'rxjs';
 import { User, SignupRequest, LoginRequest } from '../models/index';
+import { ApiService } from './api.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8000/api/auth';
+  private readonly apiService = inject(ApiService);
+  private readonly authEndpoint = environment.endpoints.auth;
 
-  private currentUserSignal = signal<User | null>(null);
-  private tokenSignal = signal<string | null>(null);
+  private readonly currentUserSignal = signal<User | null>(null);
+  private readonly tokenSignal = signal<string | null>(null);
 
   readonly currentUser = computed(() => this.currentUserSignal());
   readonly token = computed(() => this.tokenSignal());
   readonly isAuthenticated = computed(() => !!this.currentUserSignal());
   readonly userRole = computed(() => this.currentUserSignal()?.role || null);
 
-  constructor() {
-    // this.initializeFromStorage();
-  }
+  constructor() {}
 
-  // private initializeFromStorage(): void {
-  //   const token = localStorage.getItem('token');
-  //   const user = localStorage.getItem('user');
-    
-  //   if (token && user) {
-  //     this.tokenSignal.set(token);
-  //     this.currentUserSignal.set(JSON.parse(user));
-  //   }
-  // }
 
   signup(request: SignupRequest) {
-    return this.http.post(`${this.apiUrl}/signup`, request).pipe(
-      tap(response => {
-        this.setAuthState(response);
-      }),
+    return this.apiService.post(`${this.authEndpoint}/signup`, request).pipe(
+      tap(response => this.setAuthState(response)),
       catchError(error => {
-        console.error('Signup error:', error);
+        console.error('[AuthService] Signup error:', error);
         throw error;
       })
     );
   }
 
   login(request: LoginRequest) {
-    return this.http.post(`${this.apiUrl}/login`, request).pipe(
-      tap(response => {
-        this.setAuthState(response);
-      }),
+    return this.apiService.post(`${this.authEndpoint}/login`, request).pipe(
+      tap(response => this.setAuthState(response)),
       catchError(error => {
-        console.error('Login error:', error);
+        console.error('[AuthService] Login error:', error);
         throw error;
       })
     );
@@ -64,7 +50,7 @@ export class AuthService {
   }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
+    return this.apiService.get<User>(`${this.authEndpoint}/me`).pipe(
       tap(user => {
         this.currentUserSignal.set(user);
         localStorage.setItem('user', JSON.stringify(user));
@@ -73,19 +59,16 @@ export class AuthService {
   }
 
   refreshToken() {
-    return this.http.post(`${this.apiUrl}/refresh`, {}).pipe(
-      tap(response => {
-        this.setAuthState(response);
-      })
+    return this.apiService.post(`${this.authEndpoint}/refresh`, {}).pipe(
+      tap(response => this.setAuthState(response))
     );
   }
 
-  private setAuthState(response:any): void {
-    const data = response;
+  private setAuthState(response: any): void {
     this.tokenSignal.set(response.data.accessToken);
     this.currentUserSignal.set(response.data.user);
-    localStorage.setItem('token', data.data.accessToken);
-    localStorage.setItem('user', JSON.stringify(data?.data?.user || '{}'));
+    localStorage.setItem('token', response.data.accessToken);
+    localStorage.setItem('user', JSON.stringify(response.data.user || '{}'));
   }
 
   isAdmin(): boolean {

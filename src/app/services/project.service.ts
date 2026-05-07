@@ -1,47 +1,42 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, tap, map } from 'rxjs';
-import { Project, CreateProjectRequest, ProjectMember } from '../models/index';
+import { Observable, tap } from 'rxjs';
+import { Project, CreateProjectRequest } from '../models/index';
+import { ApiService } from './api.service';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
-  private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:3000/api/projects';
+  private readonly apiService = inject(ApiService);
+  private readonly projectsEndpoint = environment.endpoints.projects;
 
-  private projectsSignal = signal<Project[]>([]);
-  private currentProjectSignal = signal<Project | null>(null);
+  private readonly projectsSignal = signal<Project[]>([]);
+  private readonly currentProjectSignal = signal<Project | null>(null);
 
   readonly projects = computed(() => this.projectsSignal());
   readonly currentProject = computed(() => this.currentProjectSignal());
 
   getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.apiUrl).pipe(
-      tap(projects => {
-        this.projectsSignal.set(projects);
-      })
+    return this.apiService.get<Project[]>(this.projectsEndpoint).pipe(
+      tap(projects => this.projectsSignal.set(projects))
     );
   }
 
   getProject(id: string): Observable<Project> {
-    return this.http.get<Project>(`${this.apiUrl}/${id}`).pipe(
-      tap(project => {
-        this.currentProjectSignal.set(project);
-      })
+    return this.apiService.get<Project>(`${this.projectsEndpoint}/${id}`).pipe(
+      tap(project => this.currentProjectSignal.set(project))
     );
   }
 
   createProject(request: CreateProjectRequest): Observable<Project> {
-    return this.http.post<Project>(this.apiUrl, request).pipe(
-      tap(project => {
-        this.projectsSignal.update(projects => [...projects, project]);
-      })
+    return this.apiService.post<Project>(this.projectsEndpoint, request).pipe(
+      tap(project => this.projectsSignal.update(projects => [...projects, project]))
     );
   }
 
   updateProject(id: string, request: Partial<CreateProjectRequest>): Observable<Project> {
-    return this.http.put<Project>(`${this.apiUrl}/${id}`, request).pipe(
+    return this.apiService.patch<Project>(`${this.projectsEndpoint}/${id}`, request).pipe(
       tap(project => {
         this.projectsSignal.update(projects =>
           projects.map(p => p.id === id ? project : p)
@@ -54,18 +49,14 @@ export class ProjectService {
   }
 
   deleteProject(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
-      tap(() => {
-        this.projectsSignal.update(projects =>
-          projects.filter(p => p.id !== id)
-        );
-      })
+    return this.apiService.delete<void>(`${this.projectsEndpoint}/${id}`).pipe(
+      tap(() => this.projectsSignal.update(projects => projects.filter(p => p.id !== id)))
     );
   }
 
   addMember(projectId: string, userId: string, role: string): Observable<Project> {
-    return this.http.post<Project>(
-      `${this.apiUrl}/${projectId}/members`,
+    return this.apiService.post<Project>(
+      `${this.projectsEndpoint}/${projectId}/members`,
       { userId, role }
     ).pipe(
       tap(project => {
@@ -78,8 +69,8 @@ export class ProjectService {
   }
 
   removeMember(projectId: string, userId: string): Observable<Project> {
-    return this.http.delete<Project>(
-      `${this.apiUrl}/${projectId}/members/${userId}`
+    return this.apiService.delete<Project>(
+      `${this.projectsEndpoint}/${projectId}/members/${userId}`
     ).pipe(
       tap(project => {
         this.currentProjectSignal.set(project);
@@ -91,8 +82,8 @@ export class ProjectService {
   }
 
   updateMemberRole(projectId: string, userId: string, role: string): Observable<Project> {
-    return this.http.put<Project>(
-      `${this.apiUrl}/${projectId}/members/${userId}`,
+    return this.apiService.patch<Project>(
+      `${this.projectsEndpoint}/${projectId}/members/${userId}`,
       { role }
     ).pipe(
       tap(project => {

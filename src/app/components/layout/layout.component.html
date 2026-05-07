@@ -1,81 +1,181 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink="/dashboard">
-      <i class="bi bi-check-circle me-2"></i>Task Manager
-    </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/dashboard"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <i class="bi bi-speedometer2 me-1"></i>Dashboard
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/projects"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-folder me-1"></i>Projects
-          </a>
-        </li>
-        <li class="nav-item">
-          <a
-            class="nav-link"
-            routerLink="/tasks"
-            routerLinkActive="active"
-          >
-            <i class="bi bi-list-check me-1"></i>My Tasks
-          </a>
-        </li>
-        @if (authService.isAdmin()) {
+<!-- Modern Header Navigation -->
+<header class="header-sticky">
+  <!-- Top Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light" aria-label="Main navigation">
+    <div class="container-fluid px-4">
+      <!-- Brand -->
+      <a class="navbar-brand brand-logo" routerLink="/dashboard" title="Go to Dashboard">
+        <span class="brand-icon">
+          <i class="bi bi-check-circle-fill"></i>
+        </span>
+        <span class="brand-text">Task Manager</span>
+      </a>
+
+      <!-- Mobile Toggle Button -->
+      <button
+        class="navbar-toggler"
+        type="button"
+        (click)="toggleMobileMenu($event)"
+        [attr.aria-expanded]="mobileMenuOpen()"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navigation Items -->
+      <div class="collapse navbar-collapse" [class.show]="mobileMenuOpen()" id="navbarNav">
+        <!-- Primary Navigation -->
+        <ul class="navbar-nav ms-auto gap-2 align-items-center">
+          <!-- Dashboard -->
           <li class="nav-item">
             <a
-              class="nav-link"
-              routerLink="/admin"
+              class="nav-link nav-link-modern"
+              routerLink="/dashboard"
               routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              (click)="mobileMenuOpen.set(false)"
             >
-              <i class="bi bi-gear me-1"></i>Admin
+              <span class="nav-icon">
+                <i class="bi bi-speedometer2"></i>
+              </span>
+              <span class="nav-label">Dashboard</span>
             </a>
           </li>
-        }
-        <li class="nav-item dropdown">
-          <a
-            class="nav-link dropdown-toggle"
-            href="#"
-            id="navbarDropdown"
-            role="button"
-            data-bs-toggle="dropdown"
-          >
-            <i class="bi bi-person-circle me-1"></i>
-            {{ authService.currentUser()?.firstName }}
-          </a>
-          <ul class="dropdown-menu dropdown-menu-end" [attr.aria-labelledby]="'navbarDropdown'">
-            <li>
-              <a class="dropdown-item" href="#" (click)="logout($event)">
-                <i class="bi bi-box-arrow-right me-2"></i>Logout
+
+          <!-- Projects -->
+          <li class="nav-item">
+            <a
+              class="nav-link nav-link-modern"
+              routerLink="/projects"
+              routerLinkActive="active"
+              (click)="mobileMenuOpen.set(false)"
+            >
+              <span class="nav-icon">
+                <i class="bi bi-folder"></i>
+              </span>
+              <span class="nav-label">Projects</span>
+            </a>
+          </li>
+
+          <!-- Tasks -->
+          <li class="nav-item">
+            <a
+              class="nav-link nav-link-modern"
+              routerLink="/tasks"
+              routerLinkActive="active"
+              (click)="mobileMenuOpen.set(false)"
+            >
+              <span class="nav-icon">
+                <i class="bi bi-list-check"></i>
+              </span>
+              <span class="nav-label">Tasks</span>
+            </a>
+          </li>
+
+          <!-- Admin Panel (Admin Only) -->
+          @if (authService.isAdmin()) {
+            <li class="nav-item">
+              <a
+                class="nav-link nav-link-modern nav-link-admin"
+                routerLink="/admin/users"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: false }"
+                (click)="mobileMenuOpen.set(false)"
+              >
+                <span class="nav-icon">
+                    <i class="bi bi-people"></i>
+                </span>
+                  <span class="nav-label">User Management</span>
+                <span class="badge badge-admin ms-2">
+                  <i class="bi bi-shield-check"></i>
+                </span>
               </a>
             </li>
-          </ul>
-        </li>
-      </ul>
+          }
+
+          <!-- Separator -->
+          <li class="nav-divider d-none d-lg-block"></li>
+
+          <!-- User Profile Dropdown -->
+          <li class="nav-item dropdown">
+            <button
+              class="nav-link dropdown-toggle nav-link-user"
+              id="userDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              type="button"
+            >
+              <span class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+              </span>
+              <span class="user-name d-none d-lg-inline-flex">
+                {{ authService.currentUser()?.firstName }}
+              </span>
+              <span class="user-role d-none d-lg-inline-flex">
+                {{ authService.currentUser()?.role | uppercase }}
+              </span>
+            </button>
+
+            <!-- Profile Dropdown Menu -->
+            <ul class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="userDropdown">
+              <li class="dropdown-header">
+                <div class="user-info">
+                  <strong>{{ authService.currentUser()?.firstName }} {{ authService.currentUser()?.lastName }}</strong>
+                  <small class="text-muted d-block">{{ authService.currentUser()?.email }}</small>
+                </div>
+              </li>
+              <li><hr class="dropdown-divider" /></li>
+              <li>
+                <a class="dropdown-item" href="#" (click)="logout($event)">
+                  <i class="bi bi-box-arrow-right me-2"></i>
+                  <span>Logout</span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Breadcrumb Navigation (Optional) -->
+  <nav class="breadcrumb-nav d-none d-lg-block" aria-label="breadcrumb">
+    <div class="container-fluid px-4">
+      <small class="text-muted">
+        <i class="bi bi-house-door-fill me-2"></i>
+        <a routerLink="/dashboard">Home</a>
+        @if (currentRoute() !== '/dashboard') {
+          <span class="mx-2">/</span>
+          <span>{{ breadcrumbLabel() }}</span>
+        }
+      </small>
+    </div>
+  </nav>
+</header>
+
+<!-- Main Content Area -->
+<main class="main-content">
+  <div class="container-fluid px-4 py-4">
+    <ng-content></ng-content>
+  </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer mt-auto">
+  <div class="container-fluid px-4 py-3">
+    <div class="row align-items-center">
+      <div class="col-md-6">
+        <small class="text-muted">
+          &copy; 2024 Task Manager Pro. All rights reserved.
+        </small>
+      </div>
+      <div class="col-md-6 text-end">
+        <small class="text-muted">
+          <a href="#" class="text-decoration-none me-3">Privacy</a>
+          <a href="#" class="text-decoration-none me-3">Terms</a>
+          <a href="#" class="text-decoration-none">Support</a>
+        </small>
+      </div>
     </div>
   </div>
-</nav>
-
-<main class="container-fluid mt-4">
-  <ng-content></ng-content>
-</main>
+</footer>

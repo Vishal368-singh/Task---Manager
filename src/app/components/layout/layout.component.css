@@ -1,7 +1,351 @@
+/* ========================================
+   Layout Component - Modern Professional Styling
+   ======================================== */
+
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
-main {
-  min-height: calc(100vh - 70px);
+/* Header & Navigation Styling */
+.header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%);
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.18);
+}
+
+.navbar {
+  background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%) !important;
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+}
+
+.navbar:hover {
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+}
+
+/* Brand Logo Styling */
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.brand-logo:hover {
+  background: rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.brand-icon {
+  font-size: 1.75rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.brand-text {
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Links */
+.nav-link-modern {
+  position: relative;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 500;
+  padding: 0.75rem 1rem !important;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.nav-link-modern:hover {
+  color: #fff !important;
+  background: rgba(15, 23, 42, 0.42);
+  transform: translateY(-2px);
+}
+
+.nav-link-modern.active {
+  color: #fff !important;
+  background: rgba(15, 23, 42, 0.56);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.28);
+}
+
+.nav-icon {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}
+
+.nav-label {
+  font-size: 0.95rem;
+}
+
+/* Admin Badge */
+.nav-link-admin {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link-admin:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.badge-admin {
+  background: #e2e8f0;
+  color: #0f172a;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Navigation Divider */
+.nav-divider {
+  width: 1px;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.22);
+  border: none;
+  padding: 0;
+  margin: 0 0.75rem;
+}
+
+/* User Profile Section */
+.nav-link-user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: rgba(255, 255, 255, 0.9) !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.nav-link-user:hover {
+  color: #fff !important;
+  background: rgba(15, 23, 42, 0.42);
+}
+
+.user-avatar {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: #fff;
+  margin-left: 0.5rem;
+  background: rgba(15, 23, 42, 0.42);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+/* Profile Dropdown Menu */
+.profile-dropdown {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  margin-top: 0.5rem !important;
+}
+
+.dropdown-header {
+  padding: 1rem;
+  background: #0f172a;
+  color: #fff;
+  border-radius: 8px 8px 0 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-info strong {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.dropdown-item {
+  padding: 0.75rem 1rem;
+  color: #333;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-item:hover {
+  background: #1d4ed8;
+  color: #fff;
+}
+
+.dropdown-item i {
+  min-width: 1.2rem;
+}
+
+/* Breadcrumb Navigation */
+.breadcrumb-nav {
+  background: #f8fafc;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.breadcrumb-nav a {
+  color: #1d4ed8;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.breadcrumb-nav a:hover {
+  color: #0f172a;
+  text-decoration: underline;
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: calc(100vh - 140px);
+  overflow-y: auto;
+}
+
+/* Footer */
+.footer {
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  margin-top: auto;
+}
+
+.footer a {
+  color: #1d4ed8;
+  transition: all 0.2s ease;
+}
+
+.footer a:hover {
+  color: #0f172a;
+  text-decoration: underline;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .brand-text {
+    font-size: 1.1rem;
+  }
+
+  .navbar-collapse {
+    margin-top: 1rem;
+    background: rgba(15, 23, 42, 0.22);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    margin-bottom: -1rem;
+  }
+
+  .navbar-collapse.show {
+    display: block !important;
+  }
+
+  .nav-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .nav-divider {
+    display: none !important;
+  }
+
+  .user-name,
+  .user-role {
+    display: none !important;
+  }
+
+  .nav-link-user {
+    justify-content: center;
+  }
+
+  .nav-label {
+    display: block;
+  }
+
+  .profile-dropdown {
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    min-height: calc(100vh - 120px);
+    padding-top: 1rem;
+  }
+
+  .navbar {
+    padding: 0.75rem 0;
+  }
+
+  .brand-logo {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .brand-icon {
+    font-size: 1.5rem;
+  }
+
+  .brand-text {
+    font-size: 1rem;
+  }
+}
+
+/* Utilities */
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.text-muted {
+  color: #6c757d !important;
+}
+
+/* Animations */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.navbar-collapse.show {
+  animation: slideDown 0.3s ease;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus states for accessibility */
+.nav-link-modern:focus,
+.nav-link-user:focus,
+.dropdown-item:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
 }

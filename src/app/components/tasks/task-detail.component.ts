@@ -3,23 +3,21 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, RouterLink, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
-import { ProjectService } from '../../services/project.service';
-import { Task, Project, TaskStatus, TaskPriority } from '../../models/index';
-import { LayoutComponent } from '../layout/layout.component';
+import { Task } from '../../models/index';
 
 @Component({
   selector: 'app-task-detail',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink, LayoutComponent],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './task-detail.component.html',
   styleUrls: ['./task-detail.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TaskDetailComponent implements OnInit {
-  private taskService = inject(TaskService);
-  private route = inject(ActivatedRoute);
-  private router = inject(Router);
-  private fb = inject(FormBuilder);
+  private readonly taskService = inject(TaskService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   task = signal<Task | null>(null);
   taskForm!: FormGroup;

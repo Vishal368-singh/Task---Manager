@@ -14,9 +14,9 @@ import { SignupRequest } from '../../models/index';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent {
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly fb = inject(FormBuilder);
 
   signupForm!: FormGroup;
   error = signal<string | null>(null);

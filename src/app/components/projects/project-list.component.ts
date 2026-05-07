@@ -3,18 +3,17 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { Project } from '../../models/index';
-import { LayoutComponent } from '../layout/layout.component';
 
 @Component({
   selector: 'app-project-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, LayoutComponent],
+  imports: [CommonModule, RouterLink],
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectListComponent implements OnInit {
-  private projectService = inject(ProjectService);
+  private readonly projectService = inject(ProjectService);
 
   projects = signal<Project[]>([]);
   isLoading = signal(true);
